@@ -5,9 +5,9 @@ green='\033[0;32m'
 yellow='\033[0;33m'
 plain='\033[0m'
 
-installPath=/opt/MINERPROXYJT
+installPath=/opt/minerproxyjt
 updatePath=${installPath}/update
-serviceName=MINERPROXYJT
+serviceName=minerproxyjt
 
 check_os() {
     if [[ -f /etc/redhat-release ]]; then
@@ -79,7 +79,7 @@ else
 fi
 }
 
-install_MINERPROXYJT() {
+install_minerproxyjt() {
     check_os
     case $os in
         'ubuntu'|'debian')
@@ -97,33 +97,33 @@ install_MINERPROXYJT() {
     mkdir -p ${updatePath}
 
     cd ${updatePath}
-    wget --no-check-certificate https://github.com/MINErpRroxY/MinerProxyJT/raw/main/MINERPROXYJT
+    wget --no-check-certificate https://github.com/MINErpRroxY/minerproxyjt/raw/main/minerproxyjt
     if [ $? -ne 0 ]; then
         exit -1;
     fi
-    chmod +x MINERPROXYJT
+    chmod +x minerproxyjt
     
-    wget --no-check-certificate https://raw.githubusercontent.com/MINErpRroxY/MinerProxyJT/main/version
+    wget --no-check-certificate https://raw.githubusercontent.com/MINErpRroxY/minerproxyjt/main/version
         if [ $? -ne 0 ]; then
         exit -1;
     fi
 
-    if [ -f "${installPath}/MINERPROXYJT.bak" ]; then
-        rm -rf "${installPath}/MINERPROXYJT.bak"
+    if [ -f "${installPath}/minerproxyjt.bak" ]; then
+        rm -rf "${installPath}/minerproxyjt.bak"
         rm -rf "${installPath}/version.bak"
     fi
-    if [ -f "${installPath}/MINERPROXYJT" ]; then
-        mv "${installPath}/MINERPROXYJT" "${installPath}/MINERPROXYJT.bak"
+    if [ -f "${installPath}/minerproxyjt" ]; then
+        mv "${installPath}/minerproxyjt" "${installPath}/minerproxyjt.bak"
         mv "${installPath}/version" "${installPath}/version.bak"
     fi
     
-    mv "${updatePath}/MINERPROXYJT" "${installPath}/MINERPROXYJT"
+    mv "${updatePath}/minerproxyjt" "${installPath}/minerproxyjt"
     mv "${updatePath}/version" "${installPath}/version"
 
     create_service
 }
 
-update_MINERPROXYJT() {
+update_minerproxyjt() {
     if [ -x ${updatePath} ]; then
         rm -rf ${updatePath}
     fi
@@ -131,7 +131,7 @@ update_MINERPROXYJT() {
     mkdir -p ${updatePath}
 
     cd ${updatePath}
-       wget --no-check-certificate https://raw.githubusercontent.com/MINErpRroxY/MinerProxyJT/main/version
+       wget --no-check-certificate https://raw.githubusercontent.com/MINErpRroxY/minerproxyjt/main/version
     if [ $? -ne 0 ]; then
         exit -1;
     fi
@@ -143,10 +143,10 @@ update_MINERPROXYJT() {
         exit 0
     fi
 
-    install_MINERPROXYJT
+    install_minerproxyjt
 }
 
-uninstall_MINERPROXYJT() {
+uninstall_minerproxyjt() {
     systemctl stop ${serviceName}
     systemctl disable ${serviceName}
     rm -rf /lib/systemd/system/${serviceName}.service
@@ -169,17 +169,17 @@ PS3="请输入操作的序号: "
 select op in ${ops[@]}; do
     case ${op} in
     '安装或重新安装服务')
-        install_MINERPROXYJT
+        install_minerproxyjt
 
         exit 0
     ;;
     '升级服务')
-        update_MINERPROXYJT
+        update_minerproxyjt
 
         exit 0
     ;;
     '检测服务状态')
-        systemctl status MINERPROXYJT
+        systemctl status minerproxyjt
         if systemctl is-active ${serviceName} &>/dev/null ;then
             echo -e "[${green}提示${plain}] 服务运行中..."
         else
@@ -189,7 +189,7 @@ select op in ${ops[@]}; do
         exit 0
     ;;
     '卸载服务')
-        uninstall_MINERPROXYJT
+        uninstall_minerproxyjt
         echo -e "[${green}提示${plain}] 服务已经卸载完毕"
         exit 0
     ;;
