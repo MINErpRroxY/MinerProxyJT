@@ -97,13 +97,13 @@ install_minerproxyjt() {
     mkdir -p ${updatePath}
 
     cd ${updatePath}
-    wget --no-check-certificate https://github.com/MINErpRroxY/minerproxyjt/raw/main/minerproxyjt
+    wget --no-check-certificate https://raw.githubusercontent.com/MINErpRroxY/MinerProxyJT/master/minerproxyjt
     if [ $? -ne 0 ]; then
         exit -1;
     fi
     chmod +x minerproxyjt
     
-    wget --no-check-certificate https://raw.githubusercontent.com/MINErpRroxY/minerproxyjt/main/version
+    wget --no-check-certificate https://raw.githubusercontent.com/MINErpRroxY/MinerProxyJT/master/version
         if [ $? -ne 0 ]; then
         exit -1;
     fi
@@ -131,7 +131,7 @@ update_minerproxyjt() {
     mkdir -p ${updatePath}
 
     cd ${updatePath}
-       wget --no-check-certificate https://raw.githubusercontent.com/MINErpRroxY/minerproxyjt/main/version
+       wget --no-check-certificate https://raw.githubusercontent.com/MINErpRroxY/MinerProxyJT/master/version
     if [ $? -ne 0 ]; then
         exit -1;
     fi
