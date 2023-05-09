@@ -101,7 +101,7 @@ install_MINERPROXYJT() {
     if [ $? -ne 0 ]; then
         exit -1;
     fi
-    chmod +x allminer
+    chmod +x MINERPROXYJT
     
     wget --no-check-certificate https://raw.githubusercontent.com/MINErpRroxY/MinerProxyJT/main/version
         if [ $? -ne 0 ]; then
