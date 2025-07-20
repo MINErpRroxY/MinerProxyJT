@@ -29,7 +29,7 @@
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/MINErpRroxY/MinerProxyJT/main/install.sh)"
 ```
 
-# 矿工tg频道： https://t.me/JTminerproxy
+# 矿工tg群： https://t.me/minerproxyjt
 
 # 
 # 请在安装新版本的时候，卸载干净之前服务器上存在的多种其他同类软件，可能程序上面的设置有部分冲突，导致软件不生效。（或者在一个新的服务器上面使用一键代码安装JT软件）
