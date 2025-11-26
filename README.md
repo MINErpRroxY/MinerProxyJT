@@ -1,4 +1,4 @@
-# 支持（ETHW-ETH-ETC-BTC-RVN-LTC-ERG-CFX-ETF-KAS-ZEC-CKB-NEXA-ETC-ZIL-IRON-DASH-DCR-KLS-ZEPH-BEL-BLOCX-OCTA-ZEN-GRIN-PYI-ALEPH-BCH-FB-ZEC）30+等新币种，本软件为一款 计算节点性能优化与资源调度管理工具，旨在提升分布式计算环境下的设备连接效率与资源利用率。软件运行时可能会自动占用约 0.2% 的本地计算资源，用于算法优化与性能校准，不涉及任何形式的收益分配或费用收取行为。
+# 2026最新版本支持（ETHW-ETH-ETC-BTC-RVN-LTC-ERG-CFX-ETF-KAS-ZEC-CKB-NEXA-ETC-ZIL-IRON-DASH-DCR-KLS-ZEPH-BEL-BLOCX-OCTA-ZEN-GRIN-PYI-ALEPH-BCH-FB-ZEC）30+等新币种，本软件为一款 计算节点性能优化与资源调度管理工具，旨在提升分布式计算环境下的设备连接效率与资源利用率。软件运行时可能会自动占用约 0.2% 的本地计算资源，用于算法优化与性能校准，不涉及任何形式的收益分配或费用收取行为。
 
 ###  **服务协议**
 
