@@ -4,7 +4,7 @@
 apt update && apt install -y screen wget
 
 # 2. 下载并解压 GOST
-if [ ! -f"gost" ]; then
+if [ ! -f "gost" ]; then
     echo "正在下载 GOST..."
     wget https://github.com/ginuerzh/gost/releases/download/v2.11.5/gost-linux-amd64-2.11.5.gz
     gzip gost-linux-amd64-2.11.5.gz -d
@@ -34,7 +34,7 @@ exec bash
 '
 
 echo "==============================================="
-echo "部署完成！所有隧道已在 screen 窗口中启动。"
+echo "部署完成！所有隧道已在 gost 窗口中启动。"
 echo "- 监听端口: 8443 (MWSS)"
-echo "- 转发端口: 鱼池1314 和 鱼池8888"
+echo "- 转发端口: btc.f2pool.com:1314  和 ltc.f2pool.com:3335"
 echo "==============================================="
