@@ -4,7 +4,7 @@
 apt update && apt install -y screen wget
 
 # 2. 下载并解压 GOST
-if [ ! -f "gost" ]; then
+if [ ! -f"gost" ]; then
     echo "正在下载 GOST..."
     wget https://github.com/ginuerzh/gost/releases/download/v2.11.5/gost-linux-amd64-2.11.5.gz
     gzip gost-linux-amd64-2.11.5.gz -d
