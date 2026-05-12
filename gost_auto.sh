@@ -5,31 +5,37 @@ apt update && apt install -y screen wget
 
 # 2. 下载并解压 GOST
 if [ ! -f "gost" ]; then
-    wget https://github.com/ginuerzh/gost/releases/download/v2.11.5/gost-linux-amd64-2.11.5.gz
+    echo "正在下载 GOST..."
+    wget https://github.com
     gzip gost-linux-amd64-2.11.5.gz -d
     mv gost-linux-amd64-2.11.5 gost
     chmod +x gost
 fi
 
-# 3. 提升系统高并发连接限制 (可选，建议加上)
+# 3. 提升系统高并发连接限制
 ulimit -n 65535
 
-# 4. 在 screen 窗口中执行核心任务
-# -dmS 会创建一个处于断开模式的后台窗口，窗口名为 gost
+# 4. 在名为 "gost" 的 screen 窗口中执行所有任务
 screen -dmS gost bash -c '
 # 启动落地端监听 (8443)
 nohup ./gost -L=relay+mwss://:8443 >> /var/log/gost_server.log 2>&1 &
 
-# 等待2秒确保服务端启动
+# 等待2秒确保服务端就绪
 sleep 2
 
-# 启动中转转发 (1314)
+# 启动 1314 端口转发
 nohup ./gost -L=tcp://:1314/156.245.239.142:1314 -F=relay+mwss://127.0.0.1:8443 >> /var/log/gost_client.log 2>&1 &
 
-# 保持 screen 窗口不退出，方便后续进入查看
+# 启动 8888 端口转发
+nohup ./gost -L=tcp://:8888/156.245.239.142:8888 -F=relay+mwss://127.0.0.1:8443 >> /var/log/gost_client.log 2>&1 &
+
+# 保持窗口运行，方便查看
 exec bash
 '
 
 echo "==============================================="
-echo "部署完成！gost screen 窗口后台运行。"
+echo "部署完成！所有隧道已在 screen 窗口中启动。"
+echo "- 监听端口: 8443 (MWSS)"
+echo "- 转发端口: 1314 和 8888"
+echo "使用 'screen -r gost' 进入窗口查看运行情况。"
 echo "==============================================="
