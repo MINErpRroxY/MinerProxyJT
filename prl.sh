@@ -1,81 +1,27 @@
-#!/usr/bin/env bash
-set -eu
+#!/bin/bash
+set -e
 
-if [ "$(id -u)" -ne 0 ]; then
-  echo "This script must be run as root."
-  exit 1
-fi
+echo "=== 0. 自动清理或等待 apt 锁释放 ==++"
+# 如果有旧的 apt 进程卡住，强制杀掉它释放锁
+pkill -9 apt apt-get dpkg 2>/dev/null || true
+rm -f /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock /var/cache/apt/archives/lock 2>/dev/null || true
+dpkg --configure -a
 
-if ! command -v apt-get >/dev/null 2>&1; then
-  echo "This system does not have apt-get. This script requires Ubuntu/Debian with apt-get."
-  exit 1
-fi
+echo "=== 1. 安装基础依赖与 OpenCL 运行库 ==="
+apt update
+apt install -y wget gnupg ocl-icd-libopencl1
 
-wait_for_apt_lock() {
-  while ps -eo pid,comm --no-headers 2>/dev/null | grep -E '(^|/)(apt|apt-get|dpkg)( |$)' >/dev/null 2>&1; do
-    echo "Waiting for apt/dpkg to finish..."
-    sleep 5
-  done
-}
+echo "=== 2. 配置 CUDA 环境变量 ==="
+export PATH=/usr/local/cuda/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
 
-append_once() {
-  file="$1"
-  line="$2"
+echo "=== 3. 下载并解压 Wildrig-Multi ==="
+wget https://ghfast.top/https://github.com/andru-kun/wildrig-multi/releases/download/0.51.8/wildrig-multi-linux-0.51.8.tar.gz -O wildrig-multi-linux-0.51.8.tar.gz
+tar -zxvf wildrig-multi-linux-0.51.8.tar.gz
 
-  if [ -f "$file" ]; then
-    grep -Fqx -- "$line" "$file" 2>/dev/null || printf '%s\n' "$line" >> "$file"
-  else
-    printf '%s\n' "$line" > "$file"
-  fi
-}
+echo "=== 4. 后台启动 Wildrig-Multi ==="
+nohup ./wildrig-multi --algo pearlhash --url pool.pearlhash.xyz:9000 --url hk.pearlhash.net:9000 --user prl1pnl34q7s0y33vq9f0hm3awnwq046w7k2x460h9krgunugzxltzwqqpwp8ys@nock=0x131619dB4Cea671433fEf3f1ff708AF3aed8F216 --1 test > wildrig.log 2>&1 &
 
-wait_for_apt_lock
-apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends wget gnupg ca-certificates
-
-CUDA_KEYRING="/tmp/cuda-keyring_1.1-1_all.deb"
-wget -O "$CUDA_KEYRING" \
-  "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb"
-
-dpkg -i "$CUDA_KEYRING"
-
-wait_for_apt_lock
-apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends cuda-toolkit-12-8
-
-if [ -f "${HOME}/.bashrc" ]; then
-  append_once "${HOME}/.bashrc" 'export PATH=/usr/local/cuda-12.8/bin:$PATH'
-  append_once "${HOME}/.bashrc" 'export LD_LIBRARY_PATH=/usr/local/cuda-12.8/lib64:${LD_LIBRARY_PATH}'
-fi
-
-export PATH="/usr/local/cuda-12.8/bin:${PATH:-}"
-export LD_LIBRARY_PATH="/usr/local/cuda-12.8/lib64:${LD_LIBRARY_PATH:-}"
-
-WORK_DIR="/tmp/wildrig"
-mkdir -p "$WORK_DIR"
-cd "$WORK_DIR"
-
-WILD_URL="https://ghfast.top/https://github.com/andru-kun/wildrig-multi/releases/download/0.51.8/wildrig-multi-linux-0.51.8.tar.gz"
-ARCHIVE="wildrig-multi-linux-0.51.8.tar.gz"
-
-wget -O "$ARCHIVE" "$WILD_URL"
-tar -xzf "$ARCHIVE"
-chmod +x ./wildrig-multi
-
-if command -v nohup >/dev/null 2>&1; then
-  nohup ./wildrig-multi \
-    --algo pearlhash \
-    --url pool.earlhash.xyz:9000 \
-    --user prl1pnl3q4s0y3vq9f0hm3awnwq046wk2x460h9krdgnugzhltzwqqpwp8ys \
-    --pass 0x131619dB4CeA671433fEf3f1ff708AF3aed8F216 \
-    --test > /tmp/wildrig.log 2>&1 &
-else
-  ./wildrig-multi \
-    --algo pearlhash \
-    --url pool.earlhash.xyz:9000 \
-    --user prl1pnl3q4s0y3vq9f0hm3awnwq046wk2x460h9krdgnugzhltzwqqpwp8ys \
-    --pass 0x131619dB4CeA671433fEf3f1ff708AF3aed8F216 \
-    --test > /tmp/wildrig.log 2>&1 &
-fi
-
-echo "Miner started. Log file: /tmp/wildrig.log"
+echo "=== 脚本执行完毕，程序已在后台运行 ==="
