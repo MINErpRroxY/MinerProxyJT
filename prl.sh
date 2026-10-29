@@ -1,10 +1,12 @@
 #!/bin/bash
 
-# 设置遇到错误时中断（可选，如需严格执行可解开下一行注释）
-# set -e
-
-echo "=== 1. 更新系统软件包并安装依赖与 OpenCL 运行库 ==="
-apt update && apt install -y wget gnupg ocl-icd-libopencl1 nvidia-opencl-dev
+echo "=== 1. 更新软件源并安装依赖与 OpenCL 运行库 ==="
+apt update
+apt install -y software-properties-common
+add-apt-repository -y universe
+add-apt-repository -y multiverse
+apt update
+apt install -y wget gnupg ocl-icd-libopencl1
 
 echo "=== 2. 配置 CUDA 12.8 存储库并安装 Toolkit ==="
 wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
@@ -13,11 +15,9 @@ apt update
 apt install -y cuda-toolkit-12-8
 
 echo "=== 3. 配置环境变量 ==="
-# 写入 ~/.bashrc 持久化
 echo 'export PATH=/usr/local/cuda-12.8/bin:$PATH' >> ~/.bashrc
 echo 'export LD_LIBRARY_PATH=/usr/local/cuda-12.8/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
 
-# 立即在当前脚本进程中生效
 export PATH=/usr/local/cuda-12.8/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda-12.8/lib64:$LD_LIBRARY_PATH
 
