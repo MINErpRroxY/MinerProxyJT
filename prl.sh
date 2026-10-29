@@ -1,14 +1,5 @@
 #!/bin/bash
-set -e
-
-echo "=== 0. 等待系统后台 apt 进程释放锁 ==="
-while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
-    echo "系统正在进行后台更新，等待 5 秒..."
-    sleep 5
-done
-
 echo "=== 1. 安装基础依赖与 OpenCL 运行库 ==="
-apt update
 apt install -y wget gnupg ocl-icd-libopencl1
 
 echo "=== 2. 配置 CUDA 环境变量 ==="
