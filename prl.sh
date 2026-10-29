@@ -3,8 +3,8 @@
 # 设置遇到错误时中断（可选，如需严格执行可解开下一行注释）
 # set -e
 
-echo "=== 1. 更新系统软件包并安装依赖 ==="
-apt update && apt install -y wget gnupg
+echo "=== 1. 更新系统软件包并安装依赖与 OpenCL 运行库 ==="
+apt update && apt install -y wget gnupg ocl-icd-libopencl1 nvidia-opencl-dev
 
 echo "=== 2. 配置 CUDA 12.8 存储库并安装 Toolkit ==="
 wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
